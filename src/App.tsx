@@ -57,13 +57,9 @@ const Entry = ({entry, depth}: {entry: IEntryProps, depth: number}) => {
 
   const hasChildren = !!entry.children?.length
 
-  const handleClick = () => {
-    if(hasChildren) setOpen(!open)
-  }
-
   return <div>
     {entry.children
-      ? <div onClick={handleClick}>{open ? '-' : '+'} {entry?.name}</div>
+      ? <div onClick={() => setOpen(!open)}>{open ? '-' : '+'} {entry?.name}</div>
       : <div>{entry.name}</div>
     }
     {hasChildren && open && <div style={{marginLeft: depth * 5 + 'px'}}>
