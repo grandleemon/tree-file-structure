@@ -1,32 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import {useState} from "react";
+
+const fileStructure = {
+  children: [
+    {
+      name: 'src',
+      children: [
+        {
+          name: 'App.css',
+          children: [
+            {
+              name: 'App.css',
+            },
+            {
+              name: 'App.tsx',
+              children: [
+                {
+                  name: 'App.css',
+                  children: [
+                    {
+                      name: 'App.css',
+                    },
+                    {
+                      name: 'App.tsx',
+                    },
+                  ],
+                },
+                {
+                  name: 'App.tsx',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'App.tsx',
+        },
+      ],
+    },
+    {
+      name: 'index.html',
+    },
+    {
+      name: 'package.json',
+    },
+  ]
+}
+
+interface IEntryProps {
+  name: string
+  children?: IEntryProps[]
+}
+
+const Entry = ({entry, depth}: {entry: IEntryProps, depth: number}) => {
+  const [open, setOpen] = useState<boolean>(false)
+
+  const hasChildren = !!entry.children?.length
+
+  const handleClick = () => {
+    if(hasChildren) setOpen(!open)
+  }
+
+  return <div>
+    <div onClick={handleClick}>{hasChildren && !open && '+ '}{hasChildren && open && '- '}{entry?.name}</div>
+    {hasChildren && open && <div style={{marginLeft: depth * 5 + 'px'}}>
+      {entry?.children?.map((item, i) => (
+        <Entry entry={item} depth={depth + 1} key={i} />
+      ))}
+    </div>}
+  </div>
+}
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {fileStructure.children.map((item, i) => (
+        <Entry entry={item} depth={1} key={i}/>
+      ))}
     </div>
   )
 }
