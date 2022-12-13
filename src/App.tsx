@@ -62,7 +62,10 @@ const Entry = ({entry, depth}: {entry: IEntryProps, depth: number}) => {
   }
 
   return <div>
-    <div onClick={handleClick}>{hasChildren && !open && '+ '}{hasChildren && open && '- '}{entry?.name}</div>
+    {entry.children
+      ? <div onClick={handleClick}>{open ? '-' : '+'} {entry?.name}</div>
+      : <div>{entry.name}</div>
+    }
     {hasChildren && open && <div style={{marginLeft: depth * 5 + 'px'}}>
       {entry?.children?.map((item, i) => (
         <Entry entry={item} depth={depth + 1} key={i} />
